@@ -26,7 +26,7 @@ $ gcloud builds submit --project chatgpt-teacher --tag gcr.io/chatgpt-teacher/gp
 
 ## 注意事項
 - 現在、Local, Staging, Production 環境は共通のバックエンドを使用しています。（Cloud Run の費用削減が目的）
-- 将来的には、各環境（Local, Staging, Production）に個別のデプロイ手順と環境を整備する必要があります。
+- 将来的には、各環境（Local、Staging、Production）を個別に構築し、それぞれに対応したCI/CDパイプラインを整備する必要があります。
 
 |AsIs|ToBe|
 |---|---|

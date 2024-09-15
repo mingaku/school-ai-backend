@@ -9,7 +9,7 @@ $ npm install
 
 Start the server:
 ```console
-$ npm install
+$ node index.js
 ```
 
 ## How to deploy 

@@ -1,27 +1,32 @@
 # school-ai-backend
 
-## Quick Start
+## 概要
+このリポジトリは、スクールAIで生成AIのAPIを実行するためのエンドポイントを管理しています。
 
-Install dependencies:
+
+## クイックスタート
+
+依存関係をインストール:
 ```console
 $ npm install
 ```
 
-Start the server:
+サーバーを起動:
 ```console
 $ node index.js
 ```
 
-## How to deploy 
+## デプロイ手順
+ 
 
-Run following: (参考記事：https://qiita.com/riku-shiru/items/d3f7dda5a5e87c4b26e9): 
+以下のコマンドを実行してデプロイします (参考記事：https://qiita.com/riku-shiru/items/d3f7dda5a5e87c4b26e9): 
 ```console
 $ gcloud builds submit --project chatgpt-teacher --tag gcr.io/chatgpt-teacher/gpt && gcloud beta run deploy school-ai --image gcr.io/chatgpt-teacher/gpt --platform managed
 ```
 
-## Note
-- 現状は、Local, Stg, Prodでバックエンドを共通利用している (Cloud runの費用削減が目的)
-- 今後はToBeのようにLocal, Stg, Prodに対するデプロイ手順と環境を構築する
+## 注意事項
+- 現在、Local, Staging, Production 環境は共通のバックエンドを使用しています。（Cloud Run の費用削減が目的）
+- 将来的には、各環境（Local, Staging, Production）に個別のデプロイ手順と環境を整備する必要があります。
 
 |AsIs|ToBe|
 |---|---|

@@ -12,6 +12,7 @@ const streamingResponseRouter = require("./routes/streamingResponse");
 const streamingResponseAzureRouter = require("./routes/streamingResponseAzure");
 const assistantApi = require("./routes/assistantApi");
 const azureAssistantApi = require("./routes/azureAssistantApi");
+const amazonBedrock = require("./routes/amazonBedrock");
 const tts = require("./routes/tts");
 const claude = require("./routes/claude");
 const app = express();
@@ -24,6 +25,7 @@ app.use(streamingResponseRouter);
 app.use(streamingResponseAzureRouter);
 app.use(assistantApi);
 app.use(azureAssistantApi);
+app.use(amazonBedrock);
 app.use(tts);
 app.use(claude);
 

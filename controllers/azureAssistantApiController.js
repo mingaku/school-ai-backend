@@ -236,6 +236,8 @@ exports.createThreadAndRun = async (req, res) => {
         messages,
       },
       stream: true,
+      max_prompt_tokens: 50000,
+      max_completion_tokens: 50000,
     });
 
     res.setHeader("Content-Type", "text/event-stream");

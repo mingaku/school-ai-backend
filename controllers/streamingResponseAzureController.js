@@ -34,6 +34,24 @@ exports.handleStreamingResponseAzure = async (req, res) => {
     // ストリーミングレスポンスをクライアントにパイプする
     response.data.pipe(res);
   } catch (error) {
+    const stream = error.response.data;
+    let body = "";
+    stream.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+    stream.on("end", () => {
+      try {
+        const parsed = JSON.parse(body);
+        console.log("エラーレスポンス（パース済み）:", JSON.stringify(parsed));
+
+        const { message, innererror } = parsed.error || {};
+        console.log("エラーメッセージ:", message);
+        console.log("内部エラー詳細:", JSON.stringify(innererror, null, 2));
+      } catch (err) {
+        console.error("JSONパースエラー:", err.message);
+      }
+    });
+
     res.status(500).send({ error: error.message });
   }
 };

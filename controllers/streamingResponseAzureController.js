@@ -34,24 +34,42 @@ exports.handleStreamingResponseAzure = async (req, res) => {
     // ストリーミングレスポンスをクライアントにパイプする
     response.data.pipe(res);
   } catch (error) {
-    const stream = error.response.data;
+    const errorDetail = await getErrorDetail(error.response.data);
+    res.status(500).send({ error: error.message, detail: errorDetail });
+  }
+};
+
+async function getErrorDetail(errorStream) {
+  return new Promise((resolve, reject) => {
     let body = "";
-    stream.on("data", (chunk) => {
+    const detail = { message: "", innererror: null, code: "" };
+
+    errorStream.on("data", (chunk) => {
       body += chunk.toString();
     });
-    stream.on("end", () => {
+
+    errorStream.on("end", () => {
       try {
         const parsed = JSON.parse(body);
-        console.log("エラーレスポンス（パース済み）:", JSON.stringify(parsed));
-
-        const { message, innererror } = parsed.error || {};
-        console.log("エラーメッセージ:", message);
-        console.log("内部エラー詳細:", JSON.stringify(innererror, null, 2));
-      } catch (err) {
-        console.error("JSONパースエラー:", err.message);
+        console.log("エラーレスポンスBody:", JSON.stringify(parsed));
+        const {
+          message = "",
+          innererror = null,
+          code = "",
+        } = parsed.error || {};
+        detail.message = message;
+        detail.innererror = innererror;
+        detail.code = code;
+        resolve(detail);
+      } catch (e) {
+        console.error("JSONパースエラー:", e.message);
+        reject({ message: "", innererror: null });
       }
     });
 
-    res.status(500).send({ error: error.message });
-  }
-};
+    errorStream.on("error", (e) => {
+      console.error("エラーストリーム処理エラー:", e.message);
+      reject({ message: "", innererror: null });
+    });
+  });
+}

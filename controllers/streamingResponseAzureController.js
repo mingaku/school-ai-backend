@@ -34,6 +34,42 @@ exports.handleStreamingResponseAzure = async (req, res) => {
     // ストリーミングレスポンスをクライアントにパイプする
     response.data.pipe(res);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    const errorDetail = await getErrorDetail(error.response.data);
+    res.status(500).send({ error: error.message, detail: errorDetail });
   }
 };
+
+async function getErrorDetail(errorStream) {
+  return new Promise((resolve, reject) => {
+    let body = "";
+    const detail = { message: "", innererror: null, code: "" };
+
+    errorStream.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    errorStream.on("end", () => {
+      try {
+        const parsed = JSON.parse(body);
+        console.log("エラーレスポンスBody:", JSON.stringify(parsed));
+        const {
+          message = "",
+          innererror = null,
+          code = "",
+        } = parsed.error || {};
+        detail.message = message;
+        detail.innererror = innererror;
+        detail.code = code;
+        resolve(detail);
+      } catch (e) {
+        console.error("JSONパースエラー:", e.message);
+        reject({ message: "", innererror: null });
+      }
+    });
+
+    errorStream.on("error", (e) => {
+      console.error("エラーストリーム処理エラー:", e.message);
+      reject({ message: "", innererror: null });
+    });
+  });
+}

@@ -15,6 +15,7 @@ const azureAssistantApi = require("./routes/azureAssistantApi");
 const amazonBedrock = require("./routes/amazonBedrock");
 const tts = require("./routes/tts");
 const claude = require("./routes/claude");
+const vertexAI = require("./routes/vertexAI");
 const app = express();
 const PORT = process.env.PORT || 8080; // Cloud Runで指定されたPORT環境変数を使用
 
@@ -28,6 +29,7 @@ app.use(azureAssistantApi);
 app.use(amazonBedrock);
 app.use(tts);
 app.use(claude);
+app.use(vertexAI);
 
 app.listen(PORT, () => {
   console.log(`Server started on http://localhost:${PORT}`);

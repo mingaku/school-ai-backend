@@ -9,12 +9,22 @@ exports.handleStreamingResponseAzure = async (req, res) => {
   );
   const { model } = req.body;
   const resourceName = "gpt-westus-mingaku";
-  const AZURE_API_KEY = process.env.AZURE_API_KEY;
+  let AZURE_API_KEY = process.env.AZURE_API_KEY;
   let apiVersion = "2023-05-15";
-  if (model === "gpt4v") {
-    apiVersion = "2023-12-01-preview";
+
+  let AZURE_API_ENDPOINT = "";
+  if (model === "azure-o1") {
+    //TODO: Eastでしかサポートされていないモデルが増えてくると、ちゃんとコードを整理した方が良い
+    AZURE_API_ENDPOINT =
+      "https://gpt-eastus2-mingaku.openai.azure.com/openai/deployments/azure-o1/chat/completions?api-version=2024-12-01-preview";
+    AZURE_API_KEY = process.env.AZURE_SUB_API_KEY;
+  } else {
+    if (model === "gpt4v") {
+      apiVersion = "2023-12-01-preview";
+    }
+    AZURE_API_ENDPOINT = `https://${resourceName}.openai.azure.com/openai/deployments/${model}/chat/completions?api-version=${apiVersion}`;
   }
-  const AZURE_API_ENDPOINT = `https://${resourceName}.openai.azure.com/openai/deployments/${model}/chat/completions?api-version=${apiVersion}`;
+
   try {
     const response = await axios.post(
       AZURE_API_ENDPOINT,

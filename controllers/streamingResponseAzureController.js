@@ -25,11 +25,17 @@ exports.handleStreamingResponseAzure = async (req, res) => {
     AZURE_API_ENDPOINT = `https://${resourceName}.openai.azure.com/openai/deployments/${model}/chat/completions?api-version=${apiVersion}`;
   }
 
+  let reqBody = { ...req.body };
+  if (model === "azure-o1" && "temperature" in reqBody) {
+    //TODO: o1はtemperatureをパラメータとして設定できないが、今後改善されるかもしれないのでtemperatureが使えるか試した方が良い
+    delete reqBody.temperature;
+  }
+
   try {
     const response = await axios.post(
       AZURE_API_ENDPOINT,
       {
-        ...req.body,
+        ...reqBody,
         stream: true,
       },
       {

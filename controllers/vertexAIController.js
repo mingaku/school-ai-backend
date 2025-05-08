@@ -1,13 +1,8 @@
 const axios = require("axios");
 const { VertexAI } = require("@google-cloud/vertexai");
 
-/**
- * TODO(developer): Update these variables before running the sample.
- */
 const PROJECT_ID = "chatgpt-teacher";
 const LOCATION = "us-central1";
-// const MODEL = "gemini-1.5-flash-001";
-// const MODEL = "gemini-1.5-pro-002";
 
 exports.handleVertexAIGemini = async (req, res) => {
   const { model, max_tokens, messages, anthropic_version, temperature } =

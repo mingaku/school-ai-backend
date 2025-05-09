@@ -11,14 +11,21 @@ const credentials = {
   accessKeyId,
   secretAccessKey,
 };
-const bedrock = new BedrockRuntimeClient({
-  credentials,
-  region: "ap-northeast-1",
-});
 
 exports.handleAmazonBedrockClaude = async (req, res) => {
   const { model, max_tokens, messages, anthropic_version, temperature } =
     req.body;
+
+  // us-east-2を使うユースケースを想定していなかったため、フロントからregionを送信する仕組みを作成していないので、一旦バックエンドでmodelに応じてregionを切り替える
+  const region =
+    model === "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+      ? "us-east-2"
+      : "ap-northeast-1";
+  const bedrock = new BedrockRuntimeClient({
+    credentials,
+    region,
+  });
+
   const updatedMessages = messages.map((item) => ({
     ...item,
     role: item.role === "system" ? "user" : item.role,
@@ -69,6 +76,7 @@ exports.handleAmazonBedrockClaude = async (req, res) => {
     contentType: "application/json",
     body: JSON.stringify(body),
   };
+  console.log("input", input);
   try {
     const command = new InvokeModelWithResponseStreamCommand(input);
     const bedrockResponse = await bedrock.send(command);

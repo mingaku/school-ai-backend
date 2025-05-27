@@ -17,6 +17,7 @@ const amazonBedrock = require("./routes/amazonBedrock");
 const tts = require("./routes/tts");
 const claude = require("./routes/claude");
 const vertexAI = require("./routes/vertexAI");
+const azureCredentialInfo = require("./routes/azureCredentialInfo");
 const app = express();
 const PORT = process.env.PORT || 8080; // Cloud Runで指定されたPORT環境変数を使用
 
@@ -32,7 +33,16 @@ app.use(amazonBedrock);
 app.use(tts);
 app.use(claude);
 app.use(vertexAI);
+app.use("/", azureCredentialInfo);
 
-app.listen(PORT, () => {
-  console.log(`Server started on http://localhost:${PORT}`);
+const http = require("http");
+const server = http.createServer(app); // ✅ http server を使う
+
+// HTTPルートの動作確認用
+app.get("/", (req, res) => {
+  res.send("Hello from Cloud Run + WebSocket");
+});
+
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

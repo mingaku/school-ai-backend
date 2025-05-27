@@ -83,9 +83,14 @@ exports.handleAmazonBedrockClaude = async (req, res) => {
     for await (const item of bedrockResponse.body) {
       const event = JSON.parse(new TextDecoder().decode(item.chunk.bytes));
       if (event.type === "message_start") {
+        // res.writeHead(200, {
+        //   "Content-Type": "text/plain; charset=utf-8",
+        //   "Transfer-Encoding": "chunked",
+        // });
         res.writeHead(200, {
-          "Content-Type": "text/plain; charset=utf-8",
-          "Transfer-Encoding": "chunked",
+          "Content-Type": "text/event-stream; charset=utf-8",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
         });
       }
       if (event.type === "content_block_delta") {

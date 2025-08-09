@@ -13,7 +13,6 @@
     "@anthropic-ai/sdk": "^0.20.6",
     "@aws-sdk/client-bedrock-runtime": "^3.499.0",
     "@azure/ai-projects": "^1.0.0-beta.2",
-    "@azure/identity": "^4.7.0",
     "@azure/openai": "^2.0.0-beta.1",
     "@azure/openai-assistants": "^1.0.0-beta.5",
     "@google-cloud/vertexai": "^1.9.2",
@@ -24,9 +23,10 @@
     "form-data": "^4.0.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.44.0",
     "multer": "^1.4.5-lts.1",
-    "openai": "^4.54.0",
     "path": "^0.12.7",
     "stream": "^0.0.3",
-    "ws": "^8.18.2"
+    "ws": "^8.18.2",
+    "openai": "latest",
+    "@azure/identity": "latest"
   }
 }

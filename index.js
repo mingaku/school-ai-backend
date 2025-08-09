@@ -1,7 +1,7 @@
 /*
 デプロイ手順
 参考記事：https://qiita.com/riku-shiru/items/d3f7dda5a5e87c4b26e9
-gcloud builds submit --project chatgpt-teacher --tag gcr.io/chatgpt-teacher/gpt && gcloud beta run deploy school-ai --image gcr.io/chatgpt-teacher/gpt --platform managed
+gcloud builds submit --project chatgpt-teacher --tag gcr.io/chatgpt-teacher/gpt && gcloud run deploy school-ai --image gcr.io/chatgpt-teacher/gpt --platform managed --project chatgpt-teacher
 */
 
 require("dotenv").config();

@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { handleAzureGpt5 } = require("./azureGpt5Handler");
 
 exports.handleStreamingResponseAzure = async (req, res) => {
   console.log(
@@ -8,6 +9,11 @@ exports.handleStreamingResponseAzure = async (req, res) => {
     })
   );
   const { model } = req.body;
+
+  // azure-gpt-5は専用のハンドラーを使用
+  if (model === "azure-gpt-5") {
+    return handleAzureGpt5(req.body, res);
+  }
   const resourceName = "gpt-westus-mingaku";
   let AZURE_API_KEY = process.env.AZURE_API_KEY;
   let apiVersion = "2023-05-15";

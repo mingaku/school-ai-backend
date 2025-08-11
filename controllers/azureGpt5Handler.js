@@ -36,9 +36,10 @@ async function handleAzureGpt5(reqBody, res) {
     if (reqBody.max_completion_tokens) {
       completionRequest.max_completion_tokens = reqBody.max_completion_tokens;
     }
-    if (reqBody.temperature !== undefined) {
-      completionRequest.temperature = reqBody.temperature;
-    }
+    // GPT-5はtemperatureパラメータをサポートしていないため除外
+    // if (reqBody.temperature !== undefined) {
+    //   completionRequest.temperature = reqBody.temperature;
+    // }
     if (reqBody.top_p !== undefined) {
       completionRequest.top_p = reqBody.top_p;
     }

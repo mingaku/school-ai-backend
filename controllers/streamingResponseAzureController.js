@@ -27,6 +27,8 @@ exports.handleStreamingResponseAzure = async (req, res) => {
   } else {
     if (model === "gpt4v") {
       apiVersion = "2023-12-01-preview";
+    } else if (model === "azure-o3-mini") {
+      apiVersion = "2025-01-01-preview";
     }
     AZURE_API_ENDPOINT = `https://${resourceName}.openai.azure.com/openai/deployments/${model}/chat/completions?api-version=${apiVersion}`;
   }

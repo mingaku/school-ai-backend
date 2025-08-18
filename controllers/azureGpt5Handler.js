@@ -2,10 +2,8 @@ const { AzureOpenAI } = require("openai");
 
 async function handleAzureGpt5(reqBody, res) {
   const endpoint = "https://gpt-eastus2-mingaku.openai.azure.com/";
-  const modelName = "gpt-5";
-  const deployment = "azure-gpt-5";
+  const deployment = reqBody.model;
   const apiKey = process.env.AZURE_SUB_API_KEY;
-  // const apiVersion = "2024-12-01-preview";
   const apiVersion = "2025-04-01-preview";
 
   const options = {
@@ -28,7 +26,6 @@ async function handleAzureGpt5(reqBody, res) {
     // リクエストボディの準備
     const completionRequest = {
       messages: reqBody.messages,
-      model: modelName,
       stream: true,
     };
 

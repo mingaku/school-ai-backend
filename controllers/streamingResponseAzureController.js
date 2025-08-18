@@ -11,7 +11,7 @@ exports.handleStreamingResponseAzure = async (req, res) => {
   const { model } = req.body;
 
   // azure-gpt-5は専用のハンドラーを使用
-  if (model === "azure-gpt-5") {
+  if (["azure-gpt-5", "azure-gpt-5-mini", "azure-gpt-5-nano"].includes(model)) {
     return handleAzureGpt5(req.body, res);
   }
   const resourceName = "gpt-westus-mingaku";

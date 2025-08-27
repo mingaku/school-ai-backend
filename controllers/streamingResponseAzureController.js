@@ -11,7 +11,14 @@ exports.handleStreamingResponseAzure = async (req, res) => {
   const { model } = req.body;
 
   // azure-gpt-5は専用のハンドラーを使用
-  if (["azure-gpt-5", "azure-gpt-5-mini", "azure-gpt-5-nano"].includes(model)) {
+  if (
+    [
+      "azure-gpt-5",
+      "azure-gpt-5-mini",
+      "azure-gpt-5-nano",
+      "azure-gpt-5-chat",
+    ].includes(model)
+  ) {
     return handleAzureGpt5(req.body, res);
   }
   const resourceName = "gpt-westus-mingaku";
@@ -34,7 +41,10 @@ exports.handleStreamingResponseAzure = async (req, res) => {
   }
 
   let reqBody = { ...req.body };
-  if (model === "azure-o1" && "temperature" in reqBody) {
+  if (
+    ["azure-o1", "azure-o3-mini"].includes(model) &&
+    "temperature" in reqBody
+  ) {
     //TODO: o1はtemperatureをパラメータとして設定できないが、今後改善されるかもしれないので適宜temperatureが使えるか試した方が良い
     delete reqBody.temperature;
   }

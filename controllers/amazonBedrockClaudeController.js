@@ -17,10 +17,11 @@ exports.handleAmazonBedrockClaude = async (req, res) => {
     req.body;
 
   // us-east-2を使うユースケースを想定していなかったため、フロントからregionを送信する仕組みを作成していないので、一旦バックエンドでmodelに応じてregionを切り替える
-  const region =
-    model === "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
-      ? "us-east-2"
-      : "ap-northeast-1";
+  const usEast2Models = [
+    "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "us.anthropic.claude-opus-4-1-20250805-v1:0",
+  ];
+  const region = usEast2Models.includes(model) ? "us-east-2" : "ap-northeast-1";
   const bedrock = new BedrockRuntimeClient({
     credentials,
     region,

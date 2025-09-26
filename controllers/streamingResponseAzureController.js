@@ -8,6 +8,12 @@ exports.handleStreamingResponseAzure = async (req, res) => {
       ...req.body,
     })
   );
+
+  // role が "loading" のメッセージをフィルタリング
+  req.body.messages = req.body.messages.filter(
+    (message) => message.role !== "loading"
+  );
+
   const { model } = req.body;
 
   // azure-gpt-5は専用のハンドラーを使用

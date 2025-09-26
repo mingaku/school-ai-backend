@@ -10,7 +10,11 @@ exports.handleClaude = async (req, res) => {
   // console.log("req.body", {
   //   ...req.body,
   // });
-  const { model, max_tokens, messages, temperature } = req.body;
+  let { model, max_tokens, messages, temperature } = req.body;
+
+  // role が "loading" のメッセージをフィルタリング
+  messages = messages.filter((message) => message.role !== "loading");
+
   const updatedMessages = messages.map((item) => ({
     ...item,
     role: item.role === "system" ? "user" : item.role,

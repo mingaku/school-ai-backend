@@ -4,6 +4,13 @@ exports.handleStreamingResponse = async (req, res) => {
   const OPENAI_API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
   const OPENAI_API_KEY = process.env.OPENAI_SECRET_KEY;
   try {
+    // role が "loading" のメッセージをフィルタリング
+    if (req.body.messages) {
+      req.body.messages = req.body.messages.filter(
+        (message) => message.role !== "loading"
+      );
+    }
+
     console.log(
       JSON.stringify({
         severity: "INFO",

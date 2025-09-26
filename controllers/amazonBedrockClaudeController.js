@@ -13,8 +13,11 @@ const credentials = {
 };
 
 exports.handleAmazonBedrockClaude = async (req, res) => {
-  const { model, max_tokens, messages, anthropic_version, temperature } =
+  let { model, max_tokens, messages, anthropic_version, temperature } =
     req.body;
+
+  // role が "loading" のメッセージをフィルタリング
+  messages = messages.filter((message) => message.role !== "loading");
 
   // us-east-2を使うユースケースを想定していなかったため、フロントからregionを送信する仕組みを作成していないので、一旦バックエンドでmodelに応じてregionを切り替える
   const usEast2Models = [

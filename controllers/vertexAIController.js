@@ -20,7 +20,7 @@ exports.handleVertexAIGemini = async (req, res) => {
 
   const request = {
     contents: updatedMessages,
-    tools: [{ googleSearchRetrieval: {} }],
+    tools: [{ googleSearch: {} }],
   };
 
   try {

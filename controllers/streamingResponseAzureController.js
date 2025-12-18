@@ -23,6 +23,8 @@ exports.handleStreamingResponseAzure = async (req, res) => {
       "azure-gpt-5-mini",
       "azure-gpt-5-nano",
       "azure-gpt-5-chat",
+      "azure-gpt-5.2",
+      "azure-gpt-5.2-chat",
     ].includes(model)
   ) {
     return handleAzureGpt5(req.body, res);

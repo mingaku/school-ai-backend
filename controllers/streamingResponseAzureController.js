@@ -32,6 +32,7 @@ exports.handleStreamingResponseAzure = async (req, res) => {
   const resourceName = "gpt-westus-mingaku";
   let AZURE_API_KEY = process.env.AZURE_API_KEY;
   let apiVersion = "2023-05-15";
+  let supportsStreamOptions = false; // stream_options requires API version >= 2024-08-01-preview
 
   let AZURE_API_ENDPOINT = "";
   if (model === "azure-o1") {
@@ -39,11 +40,14 @@ exports.handleStreamingResponseAzure = async (req, res) => {
     AZURE_API_ENDPOINT =
       "https://gpt-eastus2-mingaku.openai.azure.com/openai/deployments/azure-o1/chat/completions?api-version=2024-12-01-preview";
     AZURE_API_KEY = process.env.AZURE_SUB_API_KEY;
+    supportsStreamOptions = true; // 2024-12-01-preview supports stream_options
   } else {
     if (model === "gpt4v") {
       apiVersion = "2023-12-01-preview";
+      // supportsStreamOptions remains false
     } else if (model === "azure-o3-mini") {
       apiVersion = "2025-01-01-preview";
+      supportsStreamOptions = true;
     }
     AZURE_API_ENDPOINT = `https://${resourceName}.openai.azure.com/openai/deployments/${model}/chat/completions?api-version=${apiVersion}`;
   }
@@ -58,13 +62,15 @@ exports.handleStreamingResponseAzure = async (req, res) => {
   }
 
   try {
+    const requestBody = {
+      ...reqBody,
+      stream: true,
+      ...(supportsStreamOptions ? { stream_options: { include_usage: true } } : {}),
+    };
+
     const response = await axios.post(
       AZURE_API_ENDPOINT,
-      {
-        ...reqBody,
-        stream: true,
-        stream_options: { include_usage: true },
-      },
+      requestBody,
       {
         headers: {
           "api-key": AZURE_API_KEY,
@@ -77,8 +83,17 @@ exports.handleStreamingResponseAzure = async (req, res) => {
     // ストリーミングレスポンスをクライアントにパイプする
     response.data.pipe(res);
   } catch (error) {
-    const errorDetail = await getErrorDetail(error.response.data);
-    res.status(500).send({ error: error.message, detail: errorDetail });
+    // error.responseがundefinedの場合のエラーハンドリング
+    if (error.response && error.response.data) {
+      const errorDetail = await getErrorDetail(error.response.data);
+      res.status(500).send({ error: error.message, detail: errorDetail });
+    } else {
+      console.error("Azure API Error:", error.message);
+      res.status(500).send({
+        error: error.message,
+        detail: { message: error.message, code: "network_error" }
+      });
+    }
   }
 };
 

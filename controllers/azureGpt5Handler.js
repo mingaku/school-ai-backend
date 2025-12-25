@@ -27,6 +27,7 @@ async function handleAzureGpt5(reqBody, res) {
     const completionRequest = {
       messages: reqBody.messages,
       stream: true,
+      stream_options: { include_usage: true },
     };
 
     // オプショナルパラメータの追加

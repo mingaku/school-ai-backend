@@ -63,6 +63,7 @@ exports.handleStreamingResponseAzure = async (req, res) => {
       {
         ...reqBody,
         stream: true,
+        stream_options: { include_usage: true },
       },
       {
         headers: {
